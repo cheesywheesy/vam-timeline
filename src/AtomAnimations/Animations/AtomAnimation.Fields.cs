@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Events;
@@ -140,8 +141,26 @@ namespace VamTimeline
         public bool syncSubsceneOnly { get; set; }
         public bool syncWithPeers { get; set; } = true;
         public bool forceBlendTime { get; set; }
+        private bool _ignoreSequencing;
+        public bool ignoreSequencing
+        {
+            get { return _ignoreSequencing;}
+            set
+            {
+                _ignoreSequencing = value;
+                if (value) return;
+                foreach (var clipName in index.currentlyPlayedClipByLayerQualified.Values.Select(x => x.val).ToList())
+                {
+                    foreach (var clip in index.ByName(clipName))
+                    {
+                        if(clip.nextAnimationName != null)
+                            AssignNextAnimation(clip);
+                    }
 
-        public bool ignoreSequencing { get; set; }
+                    index.ByName(clipName);
+                }
+            }
+        }
 
         public AtomAnimation()
         {
