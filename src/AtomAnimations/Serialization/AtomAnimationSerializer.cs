@@ -40,6 +40,7 @@ namespace VamTimeline
             animation.timeMode = DeserializeInt(animationJSON["TimeMode"], TimeModes.UnityTime);
             animation.liveParenting = DeserializeBool(animationJSON["LiveParenting"], false);
             animation.forceBlendTime = DeserializeBool(animationJSON["ForceBlendTime"], false);
+            animation.ignoreSequencing = DeserializeBool(animationJSON["IgnoreSequencing"], false);
             if (animationJSON.HasKey("FadeManager"))
                 animation.fadeManager = DeserializeFadeManager(animationJSON["FadeManager"].AsObject);
 
@@ -96,6 +97,7 @@ namespace VamTimeline
                 preserveLength = DeserializeBool(clipJSON["SyncTransitionTimeNL"], false),
                 ensureQuaternionContinuity = DeserializeBool(clipJSON["EnsureQuaternionContinuity"], true),
                 nextAnimationName = clipJSON["NextAnimationName"]?.Value,
+                nextAnimationGroupSkip = clipJSON["NextAnimationGroupSkip"]?.Value,
                 nextAnimationTime = DeserializeFloat(clipJSON["NextAnimationTime"]),
                 nextAnimationRandomizeWeight = DeserializeFloat(clipJSON["NextAnimationRandomizeWeight"], 1),
                 nextAnimationTimeRandomize = DeserializeFloat(clipJSON["NextAnimationTimeRandomize"]),
@@ -456,6 +458,7 @@ namespace VamTimeline
                 { "TimeMode", animation.timeMode.ToString(CultureInfo.InvariantCulture) },
                 { "LiveParenting", animation.liveParenting ? "1" : "0" },
                 { "ForceBlendTime", animation.forceBlendTime ? "1" : "0" },
+                { "IgnoreSequencing", animation.ignoreSequencing ? "1" : "0" },
             };
             if (animation.fadeManager != null)
                 animationJSON["FadeManager"] = animation.fadeManager.GetJSON();
@@ -491,6 +494,8 @@ namespace VamTimeline
                 clipJSON["AnimationSegment"] = clip.animationSegment;
             if (clip.nextAnimationName != null)
                 clipJSON["NextAnimationName"] = clip.nextAnimationName;
+            if (clip.nextAnimationGroupSkip != string.Empty)
+                clipJSON["NextAnimationGroupSkip"] = clip.nextAnimationGroupSkip;
             if (clip.nextAnimationTime != 0)
                 clipJSON["NextAnimationTime"] = clip.nextAnimationTime.ToString(CultureInfo.InvariantCulture);
             if (clip.nextAnimationTimeRandomize != 0)
