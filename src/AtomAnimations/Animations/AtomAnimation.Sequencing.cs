@@ -86,9 +86,6 @@ namespace VamTimeline
         {
             if (to == null) throw new ArgumentNullException(nameof(to));
 
-            // index.currentlyPlayedClipByLayerQualified[to.animationLayerQualified].val = to.animationName;
-            // if(to.animationName!="") index.animationChoosers.FirstOrDefault(x => x.name.Contains(to.animationLayerQualified)).val = to.animationName;
-
             if (from == null)
             {
                 to.clipTime = siblingClipTime + to.timeOffset;
@@ -101,7 +98,7 @@ namespace VamTimeline
                 }
                 return;
             }
-            index.animationChoosers.First(x => x.name.Contains(to.animationLayerQualified)).val = to.animationName;
+            index.animationChoosersBySegmentId[to.animationSegmentId].First(x => x.name.Contains(to.animationLayer)).valNoCallback = to.animationName;
 
             from.playbackScheduledNextAnimation = null;
             from.playbackScheduledNextTimeLeft = float.NaN;

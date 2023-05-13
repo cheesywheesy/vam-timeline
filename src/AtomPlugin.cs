@@ -719,7 +719,7 @@ namespace VamTimeline
                     RegisterPlaySegmentTrigger(animation.index.segmentNames[i]);
                 }
 
-                CreateAndRegisterLayerStorables();
+                CreateAndRegisterAnimationChoosers();
 
                 for (var i = 0; i < animationNames.Count; i++)
                 {
@@ -840,15 +840,29 @@ namespace VamTimeline
             });
         }
 
-        private void CreateAndRegisterLayerStorables()
+        private void CreateAndRegisterAnimationChoosers()
         {
-            var animationChoosers = animation.index.animationChoosers;
-            animationChoosers.ForEach(DeregisterStringChooser);
+            List<string> segmentNames = animation.index.segmentNames;
+            var segmentChooser = new JSONStorableStringChooser(
+                "PlaySegment",
+                segmentNames,
+                segmentNames[0],
+                "PlaySegment",
+                val => animation.PlaySegment(val)
+            );
+            RegisterStringChooser(segmentChooser);
+            animation.index.segmentChooser = segmentChooser;
+
+            var animationChoosers = animation.index.animationChoosersBySegmentId;
+            animationChoosers.Values.ToList().ForEach(x => x.ForEach(DeregisterStringChooser));
             animationChoosers.Clear();
+
+            animation.index.segmentIds.ForEach(i => animationChoosers[i] = new List<JSONStorableStringChooser>());
             foreach (var clipList in animation.index.clipsGroupedByLayer)
             {
+                int segmentId = clipList[0].animationSegmentId;
                 string chooserName = $"PlayAnim {clipList[0].animationLayerQualified}";
-                JSONStorableStringChooser chooser = new JSONStorableStringChooser(
+                var chooser = new JSONStorableStringChooser(
                     chooserName,
                     clipList.Select(x => x.animationName).ToList(),
                     null,
@@ -857,10 +871,16 @@ namespace VamTimeline
                     {
                         if (val == null) return;
                         if (logger.triggersReceived) logger.Log(logger.triggersCategory, $"Triggered '{val}'");
-                        animation.PlayClipByName(val, true);
+                        animation.PlayClipByNameFromSegment(segmentId, val, true);
+                        foreach (var i in animation.index.segmentIds)
+                        {
+                            if(i==segmentId) continue;
+                            int id = i;
+                            animationChoosers[id].ForEach(x => x.valNoCallback = null);
+                        }
                     }
                 );
-                animationChoosers.Add(chooser);
+                animationChoosers[segmentId].Add(chooser);
                 RegisterStringChooser(chooser);
             }
         }

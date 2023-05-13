@@ -60,6 +60,7 @@ namespace VamTimeline
                 _playingAnimationSegment = value;
                 playingAnimationSegmentId = id;
                 onSegmentChanged.Invoke();
+                if(index.segmentChooser != null) index.segmentChooser.valNoCallback = value;
             }
         }
         public float autoStop;
@@ -147,16 +148,15 @@ namespace VamTimeline
             get { return _ignoreSequencing;}
             set
             {
+                if (_ignoreSequencing == value) return;
                 _ignoreSequencing = value;
-                if (value) return;
-                foreach (var clipName in index.animationChoosers.Select(x => x.val).ToList())
+                foreach (var clipName in index.animationChoosersBySegmentId[_playingAnimationSegment.ToId()].Select(x => x.val))
                 {
-                    foreach (var clip in index.ByName(clipName))
+                    foreach (var clip in index.ByName(_playingAnimationSegment, clipName))
                     {
-                        if(clip.nextAnimationName != null)
-                            AssignNextAnimation(clip);
+                        if (value) clip.playbackScheduledNextAnimation = null;
+                        else if(clip.nextAnimationName != null) AssignNextAnimation(clip);
                     }
-                    index.ByName(clipName);
                 }
             }
         }
