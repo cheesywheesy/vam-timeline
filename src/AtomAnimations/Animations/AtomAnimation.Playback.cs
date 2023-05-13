@@ -246,7 +246,7 @@ namespace VamTimeline
                 PlaySiblings(next);
 
 
-            index.currentlyPlayedClipByLayerQualified[next.animationLayerQualified].val = next.animationName;
+            index.animationChoosers.First(x => x.name.Contains(next.animationLayerQualified)).val = next.animationName;
 
         }
 

@@ -149,14 +149,13 @@ namespace VamTimeline
             {
                 _ignoreSequencing = value;
                 if (value) return;
-                foreach (var clipName in index.currentlyPlayedClipByLayerQualified.Values.Select(x => x.val).ToList())
+                foreach (var clipName in index.animationChoosers.Select(x => x.val).ToList())
                 {
                     foreach (var clip in index.ByName(clipName))
                     {
                         if(clip.nextAnimationName != null)
                             AssignNextAnimation(clip);
                     }
-
                     index.ByName(clipName);
                 }
             }

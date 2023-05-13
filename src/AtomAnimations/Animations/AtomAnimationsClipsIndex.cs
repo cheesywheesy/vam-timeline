@@ -56,7 +56,7 @@ namespace VamTimeline
         private readonly Dictionary<JSONStorableFloatRef, List<JSONStorableFloatAnimationTarget>> _clipsByFloatParam = new Dictionary<JSONStorableFloatRef, List<JSONStorableFloatAnimationTarget>>();
         private readonly List<AtomAnimationClip> _emptyClipList = new List<AtomAnimationClip>();
         private bool _pendingBulkUpdate;
-        public readonly Dictionary<string, JSONStorableString> currentlyPlayedClipByLayerQualified = new Dictionary<string, JSONStorableString>();
+        public List<JSONStorableStringChooser> animationChoosers = new List<JSONStorableStringChooser>();
         public AtomAnimationsClipsIndex(List<AtomAnimationClip> clips)
         {
             _clips = clips;
