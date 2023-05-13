@@ -142,6 +142,7 @@ namespace VamTimeline
         public bool syncSubsceneOnly { get; set; }
         public bool syncWithPeers { get; set; } = true;
         public bool forceBlendTime { get; set; }
+
         private bool _ignoreSequencing;
         public bool ignoreSequencing
         {
