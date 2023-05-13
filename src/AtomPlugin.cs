@@ -850,19 +850,16 @@ namespace VamTimeline
                 string chooserName = $"PlayAnim {clipList[0].animationLayerQualified}";
                 JSONStorableStringChooser chooser = new JSONStorableStringChooser(
                     chooserName,
+                    clipList.Select(x => x.animationName).ToList(),
                     null,
-                    null,
-                    chooserName
-                )
-                {
-                    choices = clipList.Select(x => x.animationName).ToList(),
-                    setCallbackFunction = val =>
+                    chooserName,
+                    val =>
                     {
                         if (val == null) return;
                         if (logger.triggersReceived) logger.Log(logger.triggersCategory, $"Triggered '{val}'");
                         animation.PlayClipByName(val, true);
                     }
-                };
+                );
                 animationChoosers.Add(chooser);
                 RegisterStringChooser(chooser);
             }
