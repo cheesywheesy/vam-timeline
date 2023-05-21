@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Oculus.Platform;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -40,6 +41,7 @@ namespace VamTimeline
         private float _nextAnimationTime;
         private float _nextAnimationRandomizeWeight = 1;
         private float _nextAnimationTimeRandomize;
+        private string _nexAnimationSkipToken;
         private string _animationName;
         private string _animationLayer;
         private string _animationSegment;
@@ -49,8 +51,6 @@ namespace VamTimeline
         private AudioSourceControl _audioSourceControl;
         private AtomPose _pose;
         private bool _applyPoseOnTransition;
-
-        public string nextAnimationGroupSkip;
 
         public UnityEvent onTargetsListChanged { get; } = new UnityEvent();
         public UnityEvent onAnimationKeyframesDirty { get; } = new UnityEvent();
@@ -502,6 +502,19 @@ namespace VamTimeline
                 if (_nextAnimationTimeRandomize == value) return;
                 _nextAnimationTimeRandomize = value;
                 if (!_skipNextAnimationSettingsModified) onAnimationSettingsChanged.Invoke(nameof(nextAnimationTimeRandomize));
+            }
+        }
+
+        public string nextAnimationSkipToken
+        {
+            get
+            {
+                return _nexAnimationSkipToken;
+            }
+            set
+            {
+                if (_nexAnimationSkipToken == value) return;
+                _nexAnimationSkipToken = string.IsNullOrEmpty(value) ? null : value;
             }
         }
         private float _speed = 1f;

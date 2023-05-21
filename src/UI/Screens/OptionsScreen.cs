@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace VamTimeline
@@ -12,6 +13,7 @@ namespace VamTimeline
         private JSONStorableBool _autoKeyframeAllControllersJSON;
         private JSONStorableBool _showPaths;
         private JSONStorableBool _ignoreSequencingJSON;
+        private JSONStorableBool _syncRenamingJSON;
 
         public override string screenId => ScreenName;
 

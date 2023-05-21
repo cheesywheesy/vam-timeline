@@ -97,7 +97,7 @@ namespace VamTimeline
                 preserveLength = DeserializeBool(clipJSON["SyncTransitionTimeNL"], false),
                 ensureQuaternionContinuity = DeserializeBool(clipJSON["EnsureQuaternionContinuity"], true),
                 nextAnimationName = clipJSON["NextAnimationName"]?.Value,
-                nextAnimationGroupSkip = clipJSON["NextAnimationGroupSkip"]?.Value,
+                nextAnimationSkipToken = clipJSON["NextAnimationSkipToken"]?.Value,
                 nextAnimationTime = DeserializeFloat(clipJSON["NextAnimationTime"]),
                 nextAnimationRandomizeWeight = DeserializeFloat(clipJSON["NextAnimationRandomizeWeight"], 1),
                 nextAnimationTimeRandomize = DeserializeFloat(clipJSON["NextAnimationTimeRandomize"]),
@@ -494,8 +494,8 @@ namespace VamTimeline
                 clipJSON["AnimationSegment"] = clip.animationSegment;
             if (clip.nextAnimationName != null)
                 clipJSON["NextAnimationName"] = clip.nextAnimationName;
-            if (clip.nextAnimationGroupSkip != string.Empty)
-                clipJSON["NextAnimationGroupSkip"] = clip.nextAnimationGroupSkip;
+            if (clip.nextAnimationSkipToken != null)
+                clipJSON["NextAnimationSkipToken"] = clip.nextAnimationSkipToken;
             if (clip.nextAnimationTime != 0)
                 clipJSON["NextAnimationTime"] = clip.nextAnimationTime.ToString(CultureInfo.InvariantCulture);
             if (clip.nextAnimationTimeRandomize != 0)

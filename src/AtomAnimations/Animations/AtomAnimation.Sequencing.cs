@@ -98,7 +98,6 @@ namespace VamTimeline
                 }
                 return;
             }
-            index.animationChoosersBySegmentId[to.animationSegmentId].First(x => x.name.Contains(to.animationLayer)).valNoCallback = to.animationName;
 
             from.playbackScheduledNextAnimation = null;
             from.playbackScheduledNextTimeLeft = float.NaN;
@@ -184,13 +183,16 @@ namespace VamTimeline
             }
             else if (source.nextAnimationGroupId != -1)
             {
-                string[] groupSkip = source.nextAnimationGroupSkip.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries);
                 var candidates = index
                     .ByLayerQualified(source.animationLayerQualifiedId)
                     .Where(c => c != source)
                     .Where(c => c.animationNameGroupId == source.nextAnimationGroupId);
-                if (groupSkip.Length > 0)
-                    candidates = candidates.Where(c => !groupSkip.Any(s => c.animationName.Contains(s)));
+                if (source.nextAnimationSkipToken != null)
+                {
+                    string[] groupSkip = source.nextAnimationSkipToken.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries);
+                    if(groupSkip.Length > 0)
+                        candidates = candidates.Where(c => !groupSkip.Any(s => c.animationName.Contains(s)));
+                }
                 next = SelectRandomClip(candidates.ToList());
             }
             else

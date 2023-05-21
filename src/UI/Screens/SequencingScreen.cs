@@ -100,7 +100,7 @@ namespace VamTimeline
             prefabFactory.CreatePopup(_nextAnimationJSON, true, true, 360f);
 
             _nextAnimationGroupSkipJSON =
-                new JSONStorableString("Exclude substrings (separate with comma)", string.Empty, val => current.nextAnimationGroupSkip = val);
+                new JSONStorableString("Exclude substrings (separate with comma)", string.Empty, val => current.nextAnimationSkipToken = val);
             prefabFactory.CreateTextInput(_nextAnimationGroupSkipJSON);
 
             _nextAnimationTimeJSON = new JSONStorableFloat("Play next in (seconds)", 0f, (float val) => SyncPlayNext(), 0f, 60f, false)
@@ -502,7 +502,7 @@ namespace VamTimeline
             _preserveLoopsJSON.valNoCallback = current.loop ? current.preserveLoops : current.preserveLength;
             _nextAnimationJSON.valNoCallback = string.IsNullOrEmpty(current.nextAnimationName) ? _noNextAnimation : current.nextAnimationName;
             _nextAnimationJSON.choices = GetEligibleNextAnimations();
-            _nextAnimationGroupSkipJSON.val = current.nextAnimationGroupSkip;
+            _nextAnimationGroupSkipJSON.val = current.nextAnimationSkipToken;
             _nextAnimationTimeJSON.valNoCallback = current.nextAnimationTime;
             _nextAnimationTimeJSON.slider.enabled = current.nextAnimationName != null;
             _nextAnimationRandomizeWeightJSON.valNoCallback = current.nextAnimationRandomizeWeight;

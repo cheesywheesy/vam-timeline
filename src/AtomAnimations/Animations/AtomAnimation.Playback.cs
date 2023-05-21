@@ -252,10 +252,6 @@ namespace VamTimeline
 
             if (allowSibling && (sequencing || !focusOnLayer))
                 PlaySiblings(next);
-
-
-            index.animationChoosersBySegmentId[next.animationSegmentId].First(x => x.name.Contains(next.animationLayer)).valNoCallback = next.animationName;
-            // index.segmentChooser.valNoCallback = next.animationSegment;
         }
 
         private void Validate()
@@ -522,6 +518,7 @@ namespace VamTimeline
                 else
                     logger.ShowTemporaryMessage($"Timeline: Play {clip.animationLayer} / {clip.animationName}");
             }
+            index.animationChoosersBySegmentId[clip.animationSegmentId].First(x => x.name.Contains(clip.animationLayer)).val = clip.animationName;
         }
 
         private void BlendOut(AtomAnimationClip clip, float blendDuration)

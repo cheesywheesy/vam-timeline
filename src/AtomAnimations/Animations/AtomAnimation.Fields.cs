@@ -60,7 +60,11 @@ namespace VamTimeline
                 _playingAnimationSegment = value;
                 playingAnimationSegmentId = id;
                 onSegmentChanged.Invoke();
-                if(index.segmentChooser != null) index.segmentChooser.valNoCallback = value;
+                if(index.segmentChooser != null)
+                {
+                    // if(index.segmentChooser.choices.Contains(value))
+                    index.segmentChooser.valNoCallback = value;
+                }
             }
         }
         public float autoStop;

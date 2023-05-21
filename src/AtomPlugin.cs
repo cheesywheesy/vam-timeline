@@ -23,6 +23,7 @@ namespace VamTimeline
 
         private JSONStorableStringChooser _animationJSON;
         private JSONStorableStringChooser _animationNamesQualifiedJSON;
+        private Dictionary<int, List<JSONStorableStringChooser>> animationChoosersBySegmentId = new Dictionary<int, List<JSONStorableStringChooser>>();
         private JSONStorableAction _nextAnimationJSON;
         private JSONStorableAction _previousAnimationJSON;
         private JSONStorableAction _nextAnimationInMainLayerJSON;
@@ -860,28 +861,33 @@ namespace VamTimeline
             animation.index.segmentIds.ForEach(i => animationChoosers[i] = new List<JSONStorableStringChooser>());
             foreach (var clipList in animation.index.clipsGroupedByLayer)
             {
-                int segmentId = clipList[0].animationSegmentId;
-                string chooserName = $"PlayAnim {clipList[0].animationLayerQualified}";
+                var firstClip = clipList[0];
+                int segmentId = firstClip.animationSegmentId;
+                string segment = firstClip.animationSegment;
+                string layer = firstClip.animationLayer;
+                string chooserName = $"PlayAnim {segment}.{layer}";
                 var chooser = new JSONStorableStringChooser(
                     chooserName,
                     clipList.Select(x => x.animationName).ToList(),
                     null,
                     chooserName,
-                    val =>
-                    {
-                        if (val == null) return;
-                        if (logger.triggersReceived) logger.Log(logger.triggersCategory, $"Triggered '{val}'");
-                        animation.PlayClipByNameFromSegment(segmentId, val, true);
-                        foreach (var i in animation.index.segmentIds)
-                        {
-                            if(i==segmentId) continue;
-                            int id = i;
-                            animationChoosers[id].ForEach(x => x.valNoCallback = null);
-                        }
-                    }
+                    val => OnAnimationChooserChanged(segment.ToId(), val)
                 );
                 animationChoosers[segmentId].Add(chooser);
                 RegisterStringChooser(chooser);
+            }
+        }
+
+        public void OnAnimationChooserChanged(int segmentId, string val)
+        {
+            if (val == null) return;
+            if (logger.triggersReceived) logger.Log(logger.triggersCategory, $"Triggered '{val}'");
+            // SuperController.LogMessage($"{containingAtom.name}: {val}");
+            animation.PlayClipByNameFromSegment(segmentId, val, true);
+            foreach (var i in animation.index.segmentIds)
+            {
+                if (i == animation.playingAnimationSegmentId) continue;
+                animation.index.animationChoosersBySegmentId[i].ForEach(x => x.valNoCallback = null);
             }
         }
 
