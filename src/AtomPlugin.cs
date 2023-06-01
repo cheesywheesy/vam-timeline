@@ -754,12 +754,7 @@ namespace VamTimeline
                 var chooser = GetStringChooserJSONParam(storableName);
                 if (chooser == null)
                 {
-                    chooser = new JSONStorableStringChooser(storableName, new List<string>(), "", storableName);
-                    chooser.setCallbackFunction += val =>
-                    {
-                        animation.PlayClipByName(val, true);
-                        chooser.valNoCallback = "";
-                    };
+                    chooser = new JSONStorableStringChooser(storableName, new List<string>(), "", storableName, OnAnimChooserSet);
                     RegisterStringChooser(chooser);
                     _animByLayer.Add(clip.animationLayerQualifiedId, chooser);
                 }
@@ -768,6 +763,18 @@ namespace VamTimeline
                 // How to deal with nothing is playing? e.g. another segment?
             }
             // TODO: Unregister
+        }
+
+        private JSONStorableStringChooser _lastAnimChooserSet;
+
+        private void OnAnimChooserSet(JSONStorableStringChooser json)
+        {
+            animation.PlayClipByName(json.val, true);
+            if (_lastAnimChooserSet != null && _lastAnimChooserSet != json)
+            {
+                _lastAnimChooserSet.valNoCallback = "";
+            }
+            _lastAnimChooserSet = json;
         }
 
         private void UpdateAnimationStorables()
