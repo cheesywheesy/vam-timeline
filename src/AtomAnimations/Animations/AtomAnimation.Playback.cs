@@ -18,6 +18,14 @@ namespace VamTimeline
             PlayClip(clip, seq);
         }
 
+        public void PlayClipByNameFromSegment(int segmentId, string animationName, bool seq)
+        {
+            var clipsByName = index.ByName(segmentId, animationName.ToId());
+            var clip = clipsByName.FirstOrDefault(c => c.animationSegment == playingAnimationSegment) ?? clipsByName.FirstOrDefault();
+            if (clip == null) return;
+            PlayClip(clip, seq);
+        }
+
         public void PlayClipBySet(string animationName, string animationSet, string animationSegment, bool seq)
         {
             if (!index.segmentNames.Contains(animationSegment))

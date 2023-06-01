@@ -754,7 +754,7 @@ namespace VamTimeline
                 var chooser = GetStringChooserJSONParam(storableName);
                 if (chooser == null)
                 {
-                    chooser = new JSONStorableStringChooser(storableName, new List<string>(), "", storableName, OnAnimChooserSet);
+                    chooser = new JSONStorableStringChooser(storableName, new List<string>(), "", storableName, x => OnAnimChooserSet(x, clip.animationSegmentId));
                     RegisterStringChooser(chooser);
                     _animByLayer.Add(clip.animationLayerQualifiedId, chooser);
                 }
@@ -767,9 +767,9 @@ namespace VamTimeline
 
         private JSONStorableStringChooser _lastAnimChooserSet;
 
-        private void OnAnimChooserSet(JSONStorableStringChooser json)
+        private void OnAnimChooserSet(JSONStorableStringChooser json, int segmentId)
         {
-            animation.PlayClipByName(json.val, true);
+            animation.PlayClipByNameFromSegment(segmentId, json.val, true);
             if (_lastAnimChooserSet != null && _lastAnimChooserSet != json)
             {
                 _lastAnimChooserSet.valNoCallback = "";
