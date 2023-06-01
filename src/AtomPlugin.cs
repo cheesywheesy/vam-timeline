@@ -755,7 +755,11 @@ namespace VamTimeline
                 if (chooser == null)
                 {
                     chooser = new JSONStorableStringChooser(storableName, new List<string>(), "", storableName);
-                    chooser.setCallbackFunction += val => animation.PlayClipByName(val, true);
+                    chooser.setCallbackFunction += val =>
+                    {
+                        animation.PlayClipByName(val, true);
+                        chooser.valNoCallback = "";
+                    };
                     RegisterStringChooser(chooser);
                     _animByLayer.Add(clip.animationLayerQualifiedId, chooser);
                 }
